@@ -106,8 +106,8 @@ while (maxDifference>tolerance)
                     break; % We break when we have achieved the max
                 end    
             end
-                mValueNew(iAsset,iShocks) = valueHighSoFar;
-                mConsumptionPolicy(iAsset,iShocks) = (y + (1+r) * asset - assetPrime);
+            mValueNew(iAsset,iShocks) = valueHighSoFar;
+            mConsumptionPolicy(iAsset,iShocks) = (y + (1+r) * asset - assetPrime);
         end % asset
 
     end % shocks
@@ -155,6 +155,7 @@ figure
 
 subplot(1,2,1)
 load infinite_horizon_low_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, lagMultiplierBorrowingConstraintInConsumptionUnits');
 title('Lag Multiplier of Borrowing Constraint - Infinite Horizon - low variance shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -165,6 +166,7 @@ ylim([min(vIncomeShocks),max(vIncomeShocks)])
 
 subplot(1,2,2)
 load infinite_horizon_high_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, lagMultiplierBorrowingConstraintInConsumptionUnits');
 title('Lag Multiplier of Borrowing Constraint - Infinite Horizon - high variance shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -178,6 +180,7 @@ savefig('lag_multiplier_infinite_horizon')
 figure
 subplot(1,2,1)
 load infinite_horizon_low_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, mValue');
 title('Value - Infinite Horizon - Low Variance Shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -188,6 +191,7 @@ ylim([min(vIncomeShocks),max(vIncomeShocks)])
 
 subplot(1,2,2)
 load infinite_horizon_high_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, mValue');
 title('Value - Infinite Horizon - High Variance Shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -202,6 +206,7 @@ savefig('value_infinite_horizon')
 figure
 subplot(1,2,1)
 load infinite_horizon_low_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, mAssetPolicy');
 title('Policy for Next Period Asset Holdings - Infinite Horizon - Low Variance Shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -212,6 +217,7 @@ ylim([min(vIncomeShocks),max(vIncomeShocks)])
 
 subplot(1,2,2)
 load infinite_horizon_high_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, mAssetPolicy');
 title('Policy for Next Period Asset Holdings - Infinite Horizon - High Variance Shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -226,6 +232,7 @@ savefig('assetPolicy_infinite_horizon')
 figure
 subplot(1,2,1)
 load infinite_horizon_low_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, mConsumptionPolicy');
 title('Policy for Consumption - Infinite Horizon - Low Variance Shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -236,6 +243,7 @@ ylim([min(vIncomeShocks),max(vIncomeShocks)])
 
 subplot(1,2,2)
 load infinite_horizon_high_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 mesh(assetasset, shockshock, mConsumptionPolicy');
 title('Policy for Consumption - Infinite Horizon - High Variance Shocks','interpreter','latex')
 xlabel('Asset $a$','interpreter','latex')
@@ -249,6 +257,7 @@ savefig('consumptionPolicy_infinite_horizon')
 
 figure 
 load infinite_horizon_low_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 
 subplot(2,2,1)
 plot(1:nPeriods,mean(mConsumptionSimulation,2))
@@ -267,6 +276,7 @@ xlabel('T')
 ylabel('a')
 
 load infinite_horizon_high_shock;
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 subplot(2,2,3)
 plot(1:nPeriods,mean(mConsumptionSimulation,2))
 xlim([1,nPeriods]);
@@ -289,10 +299,12 @@ savefig('simulation_infinite_horizon')
 
 figure
 load('infinite_horizon_low_shock.mat')
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 plot(vGridAsset,mConsumptionPolicy,'b');
 
 hold on
 load('infinite_horizon_high_shock.mat')
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 plot(vGridAsset,mConsumptionPolicy,'r');
 
 xlabel('asset');

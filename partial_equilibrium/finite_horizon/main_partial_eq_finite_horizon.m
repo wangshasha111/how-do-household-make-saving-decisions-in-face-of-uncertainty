@@ -15,18 +15,18 @@ close all;
 
 %% model and parameters
 ggamma = 1; % inverse of intertemporal elasticity of substitution
-ddelta = 0.7; % persistence of the income process
-ssigmaY = [0.2,0.25]; % income process variance
+ddelta = 0.95; % persistence of the income process
+ssigmaY = [0.2,0.4]; % income process variance
 ssigmaError=ssigmaY*(sqrt(1-ddelta^2)); % variance of the error term of the income process
 ssigmaErrorLow = min(ssigmaError);
 ssigmaErrorHigh = max(ssigmaError);
 
-rrho = 0.1; % discount rate
+rrho = 0.04; % discount rate
 bbeta = 1/(1+rrho); % discount factor
 r = 0.02;% interest rate
 
 % income shocks
-nGridShocks = 51;
+nGridShocks = 11;
 % **************************************************** TRY DIFFERENT VALUES ****************************************************
 [vIncomeShocks, mTransition]=rouwenhorstFunction(ddelta,ssigmaErrorHigh,nGridShocks); % TRY DIFFERENT VALUES of ssigmaError, low and high
 vIncomeShocks = exp(vIncomeShocks)';
@@ -51,9 +51,10 @@ if chi == 0
     [~, iAsset0]=min(abs(vGridAsset));% life starting point of asset
     vGridAsset(iAsset0)=0;
 else
-    vGridAsset = curvspaceFunction(minK, maxK, nAssets ,2)';
+    vGridAsset = curvspaceFunction(minK, maxK, nAssets ,1)';
     nGridAsset = length(vGridAsset);
     [~, iAsset0]=min(abs(vGridAsset)); % life starting point of asset
+    vGridAsset(iAsset0)=0;
 end
 
 %% exercise 3 & 5 & 6 Finite Horizon
@@ -65,6 +66,11 @@ nPeriods = 61; % horizon
 % Initial Value Functions
 
 mValue    = zeros(nGridAsset,nGridShocks,nPeriods+1); % using 0 as final period (T+1) value
+if chi ~= 0
+    mValueDeath = zeros(nGridAsset,nGridShocks);
+    mValueDeath(1:iAsset0-1,:) = -100000000;%*ones(iAsset0-1,nGridShocks);
+    mValue(:,:,end) = mValueDeath;
+end
 mAssetPolicy     = zeros(nGridAsset,nGridShocks,nPeriods);
 mConsumptionPolicy = zeros(nGridAsset,nGridShocks,nPeriods);
 mAssetPolicyIndex = ones(nGridAsset,nGridShocks,nPeriods); % index matrix starts from all 1s
@@ -75,49 +81,115 @@ mAssetPolicyIndex = ones(nGridAsset,nGridShocks,nPeriods); % index matrix starts
 % but apart from being considerably slower than the following method, we
 % also have to take care of the complex numbers since our utility function
 % involves exponentials.
+% 
+% tic
+% for iPeriods = nPeriods:-1:1
+%     mExpectedValue = mValue(:,:,iPeriods+1)*(mTransition');
+% 
+%     for iShocks=1:nGridShocks
+%         y=vIncomeShocks(iShocks); 
+%         iAssetPrimeStart = 1; %including non-zero asset holding constraint
+% 
+%         for iAsset=1:nGridAsset
+%             asset=vGridAsset(iAsset);
+%             valueHighSoFar = -Inf;
+% 
+%             for iAssetPrime = iAssetPrimeStart:nGridAsset
+%                 assetPrime=vGridAsset(iAssetPrime);
+%                 consumption=(y+(1+r)*asset-assetPrime);
+%                 valueProvisional = utilityFunction(consumption, ggamma) + ...
+%                                      bbeta * mExpectedValue(iAssetPrime,iShocks);
+% %                  if valueProvisional == -Inf && valueHighSoFar == -Inf
+% %                  if (valueProvisional == -Inf && valueHighSoFar == -Inf) | consumption <= 0
+%                 if (valueProvisional>valueHighSoFar)
+% %                     valueHighSoFar = valueProvisional;
+%                      
+% %                  elseif (valueProvisional>valueHighSoFar)
+%                     valueHighSoFar = valueProvisional;
+%                     mAssetPolicy(iAsset,iShocks,iPeriods) = assetPrime;
+%                     iAssetPrimeStart = iAssetPrime;
+%                     mAssetPolicyIndex(iAsset,iShocks,iPeriods) = iAssetPrimeStart;                    
+%                  else
+%                     break; % We break when we have achieved the max
+%                 end                       
+%             end
+%             mValue(iAsset,iShocks,iPeriods) = valueHighSoFar;
+%             mConsumptionPolicy(iAsset,iShocks,iPeriods) = (y + (1+r) * asset - assetPrime);            
+% 
+%         end
+%     end
+% 
+% %     if mod(iPeriods,20)==0
+%         fprintf(' Time Periods: %2.0f \n', iPeriods); 
+% %     end
+% end
+% toc
+% fprintf('Iteration finished.\n'); 
+% 
+% mValue = mValue(:,:,1:nPeriods);
+
 
 tic
 for iPeriods = nPeriods:-1:1
-    mExpectedValue = mValue(:,:,iPeriods+1)*(mTransition');
-
-    for iShocks=1:nGridShocks
-        y=vIncomeShocks(iShocks); 
-        iAssetPrimeStart = 1; %including non-zero asset holding constraint
-
-        for iAsset=1:nGridAsset
-            asset=vGridAsset(iAsset);
-            valueHighSoFar = -Inf;
-            
-            for iAssetPrime = iAssetPrimeStart:nGridAsset
-                assetPrime=vGridAsset(iAssetPrime);
-                consumption=(y+(1+r)*asset-assetPrime);
-                valueProvisional = (1-bbeta) * utilityFunction(consumption, ggamma) + ...
-                                     bbeta * mExpectedValue(iAssetPrime,iShocks);
-                                 
-                if (valueProvisional>valueHighSoFar)
-                    valueHighSoFar = valueProvisional;
-                    mAssetPolicy(iAsset,iShocks,iPeriods) = assetPrime;
-                    iAssetPrimeStart = iAssetPrime;
-                    mAssetPolicyIndex(iAsset,iShocks,iPeriods) = iAssetPrimeStart;                    
-                 else
-                    break; % We break when we have achieved the max
-                end                       
+    if iPeriods == nPeriods
+        iAssetPrime =iAsset0;
+        mAssetPolicyIndex(:,:,iPeriods) = iAsset0;  
+        mAssetPolicy(:,:,iPeriods) = 0;  
+        mConsumptionPolicy(:,:,iPeriods) = vIncomeShocks' + (1+r)* vGridAsset;
+        for iShocks=1:nGridShocks
+            for iAsset=1:nGridAsset
+                consumption = mConsumptionPolicy(iAsset,iShocks,iPeriods);
+                     
+                mValue(iAsset,iShocks,iPeriods) = utilityFunction(consumption, ggamma);
             end
-            mValue(iAsset,iShocks,iPeriods) = valueHighSoFar;
-            mConsumptionPolicy(iAsset,iShocks,iPeriods) = (y + (1+r) * asset - assetPrime);            
-               
         end
-    end
-    
-%     if mod(iPeriods,20)==0
+                    
+    else
+
+        mExpectedValue = mValue(:,:,iPeriods+1)*(mTransition');
+
+        for iShocks=1:nGridShocks
+            y=vIncomeShocks(iShocks); 
+            iAssetPrimeStart = 1; %including non-zero asset holding constraint
+
+            for iAsset=1:nGridAsset
+                asset=vGridAsset(iAsset);
+                valueHighSoFar = -Inf;
+
+                for iAssetPrime = iAssetPrimeStart:nGridAsset
+                    assetPrime=vGridAsset(iAssetPrime);
+                    consumption=(y+(1+r)*asset-assetPrime);
+                    valueProvisional = utilityFunction(consumption, ggamma) + ...
+                                         bbeta * mExpectedValue(iAssetPrime,iShocks);
+    %                  if valueProvisional == -Inf && valueHighSoFar == -Inf
+    %                  if (valueProvisional == -Inf && valueHighSoFar == -Inf) | consumption <= 0
+                    if (valueProvisional>valueHighSoFar)
+    %                     valueHighSoFar = valueProvisional;
+
+    %                  elseif (valueProvisional>valueHighSoFar)
+                        valueHighSoFar = valueProvisional;
+                        mAssetPolicy(iAsset,iShocks,iPeriods) = assetPrime;
+                        iAssetPrimeStart = iAssetPrime;
+                        mAssetPolicyIndex(iAsset,iShocks,iPeriods) = iAssetPrimeStart;                    
+                     else
+                        break; % We break when we have achieved the max
+                    end                       
+                end
+                mValue(iAsset,iShocks,iPeriods) = valueHighSoFar;
+                mConsumptionPolicy(iAsset,iShocks,iPeriods) = (y + (1+r) * asset - assetPrime);            
+
+            end
+        end
+
+    %     if mod(iPeriods,20)==0
         fprintf(' Time Periods: %2.0f \n', iPeriods); 
-%     end
+    %     end
+    end
 end
 toc
 fprintf('Iteration finished.\n'); 
 
 mValue = mValue(:,:,1:nPeriods);
-
 
 %% simulation
 mShocksIndexSimulation= ash_panelFunction(mTransition,nSimulations,nPeriods,nGridShocks)'; % nPeriods by nSimulations
@@ -173,7 +245,7 @@ ylabel('Income Shocks $y$','interpreter','latex')
 zlabel('value','interpreter','latex')
 xlim([min(vGridAsset),max(vGridAsset)])
 ylim([min(vIncomeShocks),max(vIncomeShocks)])
-
+% zlim([-5,5])
 savefig('value_finite_horizon')
 
 
@@ -310,3 +382,28 @@ open simulation_finite_horizon.fig
 % I tried everything but still can't get the hump shape.
 % Maybe it's because the household always has income risks, unlike
 % retirement benefit.
+
+% Once I added the borrowing constraint, with the original persistance
+% parameter, the asset holding files are always U-shaped, exactly the
+% opposite of hump shape. And the consumption goes down persistently 
+% throughout life. So I make the household more patient by lowering
+% rrho below the interest rate so that they want to save. I also decrease
+% the income shock variance. But none of this works.
+
+%================Reason for Faiilure===============
+% I can't get the hump shape.
+% I now get the two inferences up till now:
+% If the households are ALLOWED to borrow, the problem lies in the fact that
+% the interst rate is exogenous. More spesicifically, the value function is negative
+% infinity for the most entry of the value faction, 3D, and the reason is
+% that the interest rate is exogenous, so for some states of the last
+% periods, the value would always be negative infinity, or very very negative,
+% and that would cause the whole value function behaves wierd.
+
+% If the households are NOT allowed to borrow, the problem lies in the fact
+% that the households will always face income shock, even in the last
+% period of his life. That would cause the consumption to accumulate till
+% the very last periods, instead of U-shaped like in the empirical data,
+% for which the income after retirement is quite deterministic compared to
+% one's salaries. Such can be seen once we did question 7-9, where we can
+% get the consumption profile to be hump-shaped.

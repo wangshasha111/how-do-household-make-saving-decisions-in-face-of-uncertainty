@@ -95,6 +95,7 @@ subplot(1,2,2)
 vGiniCoefficientsEarnings(2) = giniFunction(vDistribution(:,2),vIndEarnings(:,2),true); % Copyright (c) 2010, Yvan Lengwiler
 xlabel('share of earnings with UBI');
 savefig('giniEarnings')
+save('giniEarnings.png')
 
 
 figure
@@ -105,6 +106,7 @@ subplot(1,2,2)
 vGiniCoefficientsIncome(2) = giniFunction(vDistribution(:,2),vIndIncome(:,2) ,true); % Copyright (c) 2010, Yvan Lengwiler
 xlabel('share of income with UBI');
 savefig('giniIncome')
+save('giniIncome.png')
 
 figure
 subplot(1,2,1)
@@ -114,6 +116,7 @@ subplot(1,2,2)
 vGiniCoefficientsAssets(2) = giniFunction(vDistribution(:,2),vIndAsset(:,2),true); % Copyright (c) 2010, Yvan Lengwiler
 xlabel('share of assets with UBI');
 savefig('giniAssets')
+save('giniAssets.png')
 
 figure
 subplot(1,2,1)
@@ -123,6 +126,7 @@ subplot(1,2,2)
 vGiniCoefficientsConsumption(2) = giniFunction(vDistribution(:,2),max(vIndConsumption(:,2) ,0),true) ;% Copyright (c) 2010, Yvan Lengwiler
 xlabel('share of consumption with UBI');
 savefig('giniConsumption')
+save('giniConsumption.png')
 
 figure
 subplot(1,2,1)
@@ -132,6 +136,7 @@ subplot(1,2,2)
 vGiniCoefficientsValue(2) = giniFunction(vDistribution(:,2),exp(vIndValue(:,2)),true); % Copyright (c) 2010, Yvan Lengwiler
 xlabel('share of value exponent with UBI');
 savefig('giniExpValue')
+save('giniExpValue.png')
 
 table(vWage,vRate)
 table(vAggY,vAggK,vAggConsumption,vAggValue)

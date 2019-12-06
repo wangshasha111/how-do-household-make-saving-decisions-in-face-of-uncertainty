@@ -6,7 +6,7 @@
 % sigma_eps is the standard deviation of the error term
 % n is the number of points in the discrete approximation
 %
-function [zgrid, P] = rouwenhorst(rho,sigma_eps,n)
+function [zgrid, P] = rouwenhorstFunction(rho,sigma_eps,n)
 
 mu_eps = 0;
 

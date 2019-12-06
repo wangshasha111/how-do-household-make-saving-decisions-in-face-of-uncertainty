@@ -1,4 +1,4 @@
-function A = curvspace(Ad,Au,n,m)
+function A = curvspaceFunction(Ad,Au,n,m)
 
 % construct a space for A with more grid ponit on the lower end                                                                                                                                          
 % Ad = min of A                                                                                                                                                                                          

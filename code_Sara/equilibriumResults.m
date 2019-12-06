@@ -61,7 +61,7 @@ parameters.wage = wage;
  %  eqK=eqPhi'*mPolFuncAssetVectorized;
  %eqK = sum(sum(reshape(eqPhi,[N,nGridAsset]).*eqAsset'));
  
- rows = zeros(1,N*nGridAsset*N);
+rows = zeros(1,N*nGridAsset*N);
 columns = zeros(1,N*nGridAsset*N);
 probs = zeros(1,N*nGridAsset*N);
 index = 1;

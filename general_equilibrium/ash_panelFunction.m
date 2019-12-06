@@ -1,5 +1,13 @@
-function Ystate = ash_panel(pimt,HH,T,rsd);
+function Ystate = ash_panelFunction(pimt,HH,T,rsd);
 % cooper version for just aggregate shocks.
+
+% pimt = transition probability matrix of Z 
+% HH = number of households
+% T = number of periods
+%  rsd = number of grid points for Z
+
+% Ystate = HH by T panel
+
 % =========================================================
 % NOW SET UP THE RANDOM VARIABLES USED FOR THE SIMULATION
 % =========================================================

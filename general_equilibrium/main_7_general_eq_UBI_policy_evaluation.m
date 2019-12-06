@@ -143,4 +143,75 @@ table(vAggY,vAggK,vAggConsumption,vAggValue)
 table(vGiniCoefficientsEarnings,vGiniCoefficientsIncome,vGiniCoefficientsAssets,vGiniCoefficientsConsumption)
 table(vGiniCoefficientsValue)
 
+
+%% simulation
+nSimulations = 5000; % number of simulated paths M
+nPeriods = 120; % number of periods in one simulation
+
+load('withoutUBI.mat')
+
+mShocksIndexSimulation= ash_panelFunction(mTransition,nSimulations,nPeriods,nGridShocks)'; % nPeriods by nSimulations
+mAssetIndexSimulation = ones(nPeriods,nSimulations); % Note this is an index matrix, so start with 1
+mConsumptionSimulation = zeros(nPeriods,nSimulations);
+mValueSimulation = zeros(nPeriods,nSimulations);
+
+for iSimulations = 1 : nSimulations
+    iAsset = 1;
+    for iPeriods = 1 : nPeriods
+        iShocks = mShocksIndexSimulation(iPeriods,iSimulations);
+        mAssetIndexSimulation(iPeriods+1,iSimulations) = mAssetPolicyIndex(iAsset,iShocks);
+        mConsumptionSimulation(iPeriods,iSimulations) = mConsumptionPolicy(iAsset,iShocks);
+        mValueSimulation(iPeriods,iSimulations) = mValue(iAsset,iShocks);
+        iAsset = mAssetPolicyIndex(iAsset,iShocks);
+        
+    end
+end
+
+mAssetIndexSimulation = mAssetIndexSimulation(1:nPeriods,:);
+
+save('withoutUBI')
+
+load('withUBI.mat')
+
+mShocksIndexSimulation= ash_panelFunction(mTransition,nSimulations,nPeriods,nGridShocks)'; % nPeriods by nSimulations
+mAssetIndexSimulation = ones(nPeriods,nSimulations); % Note this is an index matrix, so start with 1
+mConsumptionSimulation = zeros(nPeriods,nSimulations);
+mValueSimulation = zeros(nPeriods,nSimulations);
+
+for iSimulations = 1 : nSimulations
+    iAsset = 1;
+    for iPeriods = 1 : nPeriods
+        iShocks = mShocksIndexSimulation(iPeriods,iSimulations);
+        mAssetIndexSimulation(iPeriods+1,iSimulations) = mAssetPolicyIndex(iAsset,iShocks);
+        mConsumptionSimulation(iPeriods,iSimulations) = mConsumptionPolicy(iAsset,iShocks);
+        mValueSimulation(iPeriods,iSimulations) = mValue(iAsset,iShocks);
+        iAsset = mAssetPolicyIndex(iAsset,iShocks);
+        
+    end
+end
+
+mAssetIndexSimulation = mAssetIndexSimulation(1:nPeriods,:);
+
+save('withUBI.mat')
+
+figure
+load('withoutUBI.mat')
+[assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
+plot(1:nPeriods,mean(mValueSimulation,2),'b')
+xlim([1,nPeriods]);
+xlabel('T')
+ylabel('c')
+
+load('withUBI.mat')
+hold on
+plot(1:nPeriods,mean(mValueSimulation,2),'r')
+xlim([1,nPeriods]);
+title('Value - UBI')
+xlabel('T')
+ylabel('Value')
+
+legend('without UBI','with UBI','location','northwest')
+savefig('valueUBI_simulation_infinite_horizon')
+save('valueUBI_simulation_infinite_horizon.png')
+
 save('evaluationUBI')

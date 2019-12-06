@@ -1,6 +1,6 @@
 % function [capitalGap laborParticipationRate] = generalEqFunction(r,ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,labourEq,TFP,...
 %     nGridShocks,chi,upperBound,a,nAssets)
-function [kOverLGap laborParticipationRate r wage mValue mAssetPolicyIndex mAssetPolicy mConsumptionPolicy mLaborPolicy vStationaryDistribution capitalSupply laborSupplyEffective] = generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+function [kOverLGap laborParticipationRate r wage mValue mAssetPolicyIndex mAssetPolicy mConsumptionPolicy mLaborPolicy vStationaryDistribution capitalSupply laborSupplyEffective vIncomeShocks mTransition vGridAsset] = generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
     nGridShocks,chi,upperBound,a,nAssets,...
     ifLabor,nGridLabor)
 % function [kOverLGap] = generalEqUBIFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
@@ -64,7 +64,7 @@ mAssetPolicyIndexTemp = zeros(nGridAsset,nGridShocks,nGridLabor);
 maxDifference = 10.0;
 tolerance = 10^-8;
 iteration = 0;
-maxIter = 10000;
+maxIter = 1000;
 
 tic
 while (maxDifference>tolerance) && iteration <= maxIter

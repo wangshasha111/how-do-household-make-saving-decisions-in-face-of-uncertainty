@@ -41,7 +41,7 @@ nAssets = 100;
 
 % Optimization
 % options = optimset('Display','Iter','TolX',1e-07);  
-options = optimset('Display', 'off','TolX',1e-07);
+options = optimset('Display', 'off','TolX',1e-04);
 
 
 tic
@@ -61,10 +61,11 @@ toc
     nGridShocks,chi,upperBound,a,nAssets,...
     ifLabor,nGridLabor,options);
 
-[~, laborParticipationRate,r,wage] = generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+[kOverLGap laborParticipationRate r wage mValue mAssetPolicyIndex mAssetPolicy mConsumptionPolicy mLaborPolicy vStationaryDistribution capitalSupply laborSupplyEffective]  = generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
     nGridShocks,chi,upperBound,a,nAssets,...
     ifLabor,nGridLabor)
 
 table(gap,laborParticipationRate,r,wage,kkappa)
 
 save('kkappaCalibration.mat')
+save('withoutUBI')

@@ -10,7 +10,7 @@ function [laborParticipationRateGap,laborParticipationRate,kOverL] = getKappaFun
                 
 [~,laborParticipationRate] = generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
     nGridShocks,chi,upperBound,a,nAssets,...
-    ifLabor,nGridLabor)
+    ifLabor,nGridLabor);
 
     table(kOverL,diff,laborParticipationRate)
     laborParticipationRateGap = abs(laborParticipationRate-0.8);

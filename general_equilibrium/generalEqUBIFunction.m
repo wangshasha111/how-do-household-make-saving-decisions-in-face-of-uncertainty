@@ -1,11 +1,6 @@
-% function [capitalGap laborParticipationRate] = generalEqFunction(r,ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,labourEq,TFP,...
-%     nGridShocks,chi,upperBound,a,nAssets)
-function [kOverLGap laborParticipationRate r wage mValue mAssetPolicyIndex mAssetPolicy mConsumptionPolicy mLaborPolicy vStationaryDistribution capitalSupply laborSupplyEffective] = generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+function [kOverLGap govBudgetGap govBudgetProfit r wage mValue mAssetPolicyIndex mAssetPolicy mConsumptionPolicy mLaborPolicy vStationaryDistribution capitalSupply laborSupplyEffective] = generalEqUBIFunction(kOverL,ttao,llambda, kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
     nGridShocks,chi,upperBound,a,nAssets,...
     ifLabor,nGridLabor)
-% function [kOverLGap] = generalEqUBIFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
-%     nGridShocks,chi,upperBound,a,nAssets,...
-%     ifLabor,nGridLabor)
 
 ssigmaError=ssigmaY*(sqrt(1-ddelta^2)); % variance of the error term of the income process
 
@@ -21,22 +16,6 @@ maxK = upperBound;
 
     vGridAsset = curvspaceFunction(minK, maxK, nAssets ,1)';
     nGridAsset = length(vGridAsset);
-
-
-% if chi == 0
-%     temp = exp(linspace(log(minK+0.000001)*a,log(maxK)*a,nAssets))';
-%     temp_01 = (temp-min(temp))/(max(temp)-min(temp)); % re-scale to be between 0 and 1
-%     vGridAsset = temp_01*(maxK-minK) + minK; % re-scale to be between limits
-% %     clear temp temp_01;
-%     nGridAsset = length(vGridAsset);
-%     [~, iAsset0]=min(abs(vGridAsset));% life starting point of asset
-%     vGridAsset(iAsset0)=0;
-% else
-%     vGridAsset = curvspaceFunction(minK, maxK, nAssets ,1)';
-%     nGridAsset = length(vGridAsset);
-%     [~, iAsset0]=min(abs(vGridAsset)); % life starting point of asset
-%     vGridAsset(iAsset0)=0;
-% end
 
 %% 1) Calculate r given kOverL
 r = TFP * aalphaK * kOverL^(aalphaK-1) - depreciation;
@@ -64,7 +43,7 @@ mAssetPolicyIndexTemp = zeros(nGridAsset,nGridShocks,nGridLabor);
 maxDifference = 10.0;
 tolerance = 10^-8;
 iteration = 0;
-maxIter = 10000;
+maxIter = 1000;
 
 tic
 while (maxDifference>tolerance) && iteration <= maxIter
@@ -86,7 +65,7 @@ while (maxDifference>tolerance) && iteration <= maxIter
 
                     for iAssetPrime = iAssetPrimeStart:nGridAsset
                         assetPrime=vGridAsset(iAssetPrime);
-                        consumption=(y * wage * labor + (1+r)*asset - assetPrime);
+                        consumption=(y * wage * labor * (1-ttao)+ (1+r)*asset - assetPrime) + llambda;
                         
 %                         if consumption <=0
 %                             valueProvisional = - Inf;
@@ -182,6 +161,8 @@ kOverLSupply = capitalSupply/laborSupplyEffective;
 
 kOverLGap = abs(kOverLSupply - kOverL) ;
 
-laborParticipationRate = vStationaryDistribution' * (mLaborPolicy(:));
+% laborParticipationRate = vStationaryDistribution' * (mLaborPolicy(:));
+govBudgetProfit = ttao * wage * laborSupplyEffective - llambda;
+govBudgetGap = abs ( llambda - ttao * wage * laborSupplyEffective);
 
 return

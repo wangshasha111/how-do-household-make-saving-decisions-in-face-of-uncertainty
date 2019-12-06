@@ -39,38 +39,26 @@ vKOverL = zeros(nKappa,1);
 vDiff = zeros(nKappa,1);
 vLaborParticipationRate = zeros(nKappa,1);
 
-for iKappa = 1:nKappa
-    kkappa = vKappa(iKappa);
 %% Given kkappa, solve for the general equilibrium
 
-% kOverL =1;
-% tic
-% generalEqUBIFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
-%     nGridShocks,chi,upperBound,a,nAssets,ifLabor,nGridLabor);
-% toc
+for iKappa = 1:nKappa
+    kkappa = vKappa(iKappa);
 
-% guess = 1;
-%     
-% myfn = @(kOverL) generalEqUBIFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
-%     nGridShocks,chi,upperBound,a,nAssets,ifLabor,nGridLabor);
+    [kOverL,diff]=fminbnd(@(kOverL) ...
+                        generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+                        nGridShocks,chi,upperBound,a,nAssets,...
+                        ifLabor,nGridLabor),...
+                        0.000001,10,options);
 
-% tic                  
-% [kOverL,difference] = fzero(myfn,guess,options);
-% table([kOverL,difference])
-% toc
-[kOverL,diff]=fminbnd(@(kOverL) ...
-                    generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
-                    nGridShocks,chi,upperBound,a,nAssets,...
-                    ifLabor,nGridLabor),...
-                    0.000001,10,options);
-                
-                [~,laborParticipationRate,~,~]=generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
-    nGridShocks,chi,upperBound,a,nAssets,...
-    ifLabor,nGridLabor)
-                table(kOverL,diff,laborParticipationRate)
-                vKOverL(iKappa) = kOverL;
-                vDiff(iKappa) = diff;
-                vLaborParticipationRate(iKappa) = laborParticipationRate;
+    [kOverLGap laborParticipationRate r wage mValue mAssetPolicyIndex mAssetPolicy mConsumptionPolicy mLaborPolicy vStationaryDistribution capitalSupply laborSupplyEffective] =generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+        nGridShocks,chi,upperBound,a,nAssets,...
+        ifLabor,nGridLabor)
+
+    table(kOverL,diff,laborParticipationRate)
+
+    vKOverL(iKappa) = kOverL;
+    vDiff(iKappa) = diff;
+    vLaborParticipationRate(iKappa) = laborParticipationRate;
                 
 end
 

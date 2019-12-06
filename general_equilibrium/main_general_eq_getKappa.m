@@ -52,12 +52,19 @@ tic
                     0.9704,0.99,options);
 toc
 
-tic
-[~,laborParticipationRate]=getKappaFunction(kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+% tic
+% [~,laborParticipationRate]=getKappaFunction(kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+%     nGridShocks,chi,upperBound,a,nAssets,...
+%     ifLabor,nGridLabor,options);
+% toc                
+[~,laborParticipationRate,kOverL]=getKappaFunction(kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
     nGridShocks,chi,upperBound,a,nAssets,...
     ifLabor,nGridLabor,options);
-toc                
 
-table(gap,laborParticipationRate)
+[~, laborParticipationRate,r,wage] = generalEqEndoLaborFunction(kOverL,kkappa, ggamma, ddelta, ssigmaY,bbeta,aalphaK,depreciation,TFP,...
+    nGridShocks,chi,upperBound,a,nAssets,...
+    ifLabor,nGridLabor)
+
+table(gap,laborParticipationRate,r,wage,kkappa)
 
 save('kkappaCalibration.mat')

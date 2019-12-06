@@ -137,3 +137,5 @@ table(vWage,vRate)
 table(vAggY,vAggK,vAggConsumption,vAggValue)
 table(vGiniCoefficientsEarnings,vGiniCoefficientsIncome,vGiniCoefficientsAssets,vGiniCoefficientsConsumption)
 table(vGiniCoefficientsValue)
+
+save('evaluationUBI')

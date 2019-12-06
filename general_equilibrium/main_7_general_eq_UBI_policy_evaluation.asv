@@ -144,11 +144,10 @@ table(vGiniCoefficientsEarnings,vGiniCoefficientsIncome,vGiniCoefficientsAssets,
 table(vGiniCoefficientsValue)
 
 
-%% exercise 2 & 4 - infinite horizon and simulation
-nSimulations = 2000; % number of simulated paths M
-nPeriods = 61; % number of periods in one simulation
-
 %% simulation
+nSimulations = 5000; % number of simulated paths M
+nPeriods = 120; % number of periods in one simulation
+
 load('withoutUBI.mat')
 
 mShocksIndexSimulation= ash_panelFunction(mTransition,nSimulations,nPeriods,nGridShocks)'; % nPeriods by nSimulations
@@ -200,7 +199,6 @@ load('withoutUBI.mat')
 [assetasset,shockshock]=meshgrid(vGridAsset, vIncomeShocks);
 plot(1:nPeriods,mean(mValueSimulation,2),'b')
 xlim([1,nPeriods]);
-title('Average Consumption - High Variance Shocks')
 xlabel('T')
 ylabel('c')
 
@@ -208,11 +206,31 @@ load('withUBI.mat')
 hold on
 plot(1:nPeriods,mean(mValueSimulation,2),'r')
 xlim([1,nPeriods]);
-title('Average Asset Holdings - High Variance Shocks')
+title('Value - UBI')
 xlabel('T')
-ylabel('a')
+ylabel('Value')
 
-legend('without UBI','with UBI','position','northwest')
-savefig('simulation_infinite_horizon')
+legend('without UBI','with UBI','location','northwest')
+savefig('valueUBI_simulation_infinite_horizon')
+save('valueUBI_simulation_infinite_horizon.png')
+
+%% welfare analysis
+
+figure
+load('withoutUBI.mat')
+plot(vGridAsset,mValue,'b')
+hold on
+load('withUBI.mat')
+plot(vGridAsset,mValue,'r')
+savefig('valueUBI_fix_asset')
+
+figure
+load('withoutUBI.mat')
+plot(vIncomeShocks,mValue','b')
+hold on
+load('withUBI.mat')
+plot(vIncomeShocks,mValue','r')
+
+
 
 save('evaluationUBI')

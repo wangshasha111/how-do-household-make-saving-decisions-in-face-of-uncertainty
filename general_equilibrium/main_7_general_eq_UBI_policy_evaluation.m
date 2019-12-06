@@ -214,4 +214,32 @@ legend('without UBI','with UBI','location','northwest')
 savefig('valueUBI_simulation_infinite_horizon')
 save('valueUBI_simulation_infinite_horizon.png')
 
+%% welfare analysis
+
+figure
+load('withoutUBI.mat')
+plot(vGridAsset,mValue,'b')
+hold on
+load('withUBI.mat')
+plot(vGridAsset,mValue,'r')
+xlabel('Assets')
+ylabel('Value')
+title('Value under different shocks - without UBI (blue) and with UBI (red)')
+savefig('valueUBI_by_asset')
+save('valueUBI_by_asset.jpg')
+
+figure
+load('withoutUBI.mat')
+plot(log(vIncomeShocks),mValue','b')
+hold on
+load('withUBI.mat')
+plot(log(vIncomeShocks),mValue','r')
+xlabel('log income')
+ylabel('Value')
+title('Value given different assets - without UBI (blue) and with UBI (red)')
+savefig('valueUBI_by_income_shocks')
+save('valueUBI_by_income_shocks.jpg')
+
+
+
 save('evaluationUBI')

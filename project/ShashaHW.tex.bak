@@ -1,0 +1,42 @@
+
+\documentclass[thmsa,10pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\usepackage{amsmath}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{harvard}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\setlength{\oddsidemargin}{0.0in} \setlength{\evensidemargin}{0.0in}
+\setlength{\textwidth}{6.5in} \setlength{\topmargin}{-0.2in}
+\setlength{\textheight}{8.5in}
+\renewcommand{\baselinestretch}{1.4}
+
+%\input{tcilatex}
+\begin{document}
+
+%\pagenumbering{arabic} \pagestyle{plain}
+
+\author{Shasha Wang\thanks{}}
+
+\title{Research Project \\Economics 712}
+%\date{}
+\maketitle
+
+\section{Partial Equilibrium}
+
+\subsection{Agent's Problem}
+The agent's Bellman equation is:
+\begin{eqnarray}
+v(a,y) &=& \max_{a^\prime,c} u(c)+\beta E_{y^\prime|y} v(a^\prime,y^\prime) \notag\\
+s.t. && c+a^\prime = y+(1+r)a \notag
+\end{eqnarray}
+
+The stochastic Euler equation is:
+\begin{equation}
+u^\prime(c) = \beta (1+r)E_{y^\prime|y}  u^\prime(c^\prime) \notag
+\end{equation}
+
+\section{General Equilibrium}
+
+\end{document}

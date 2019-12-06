@@ -12,6 +12,8 @@ clear
 % value functions v(a; y) under the two policies for some combinations of (a; y);
 % or aggregate (utilitarian) social welfare
 
+
+
 load('withoutUBI.mat')
 
 vWage = zeros(1,2);
@@ -135,5 +137,4 @@ savefig('giniExpValue')
 
 table(vWage,vRate)
 table(vAggY,vAggK,vAggConsumption,vAggValue)
-table(vGiniCoefficientsEarnings,vGiniCoefficientsIncome,vGiniCoefficientsAssets,vGiniCoefficientsConsumption)
-table(vGiniCoefficientsValue)
+table(vGiniCoefficientsEarnings,vGiniCoefficientsIncome,vGiniCoefficientsAssets)

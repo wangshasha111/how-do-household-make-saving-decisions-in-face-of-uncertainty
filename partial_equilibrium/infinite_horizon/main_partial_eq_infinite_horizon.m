@@ -13,6 +13,8 @@ close all;
 
 % Part I Partial Equilibrium
 
+cd /Users/wss/Dropbox/fall19/project_dirk_econ712/partial_equilibrium/infinite_horizon/
+
 %% model and parameters
 ggamma = 1; % inverse of intertemporal elasticity of substitution
 ddelta = 0.8; % persistence of the income process

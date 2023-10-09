@@ -7,6 +7,6 @@ The computation consists of two parts - partial equilibrium and general equilibr
 
 The project description can be found in [ProjectFall2019.pdf](https://github.com/wangshasha111/project_dirk_econ712/blob/master/ProjectFall2019.pdf). 
 
-I output a [writeup](https://github.com/wangshasha111/project_dirk_econ712/tree/master/project_writeup) folder containing the tex file.
+I output a [writeup](https://github.com/wangshasha111/project_dirk_econ712/tree/master/project_writeup) folder containing the tex file and the PDF file.
 
 

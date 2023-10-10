@@ -12,3 +12,4 @@ The project description can be found in [ProjectFall2019.pdf](https://github.com
 I output a [writeup](https://github.com/wangshasha111/project_dirk_econ712/tree/master/project_writeup) folder containing the tex file and the PDF file.
 
 
+
